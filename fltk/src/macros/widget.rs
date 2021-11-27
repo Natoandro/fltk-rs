@@ -1100,7 +1100,7 @@ macro_rules! impl_widget_ext_via {
                 self
             }
 
-            fn with_align(mut self, align: crate::enums::Align) -> Self {
+            fn with_align(mut self, align: fltk::enums::Align) -> Self {
                 self.$member = self.$member.with_align(align);
                 self
             }
@@ -1265,7 +1265,7 @@ macro_rules! impl_widget_ext_via {
 
             fn emit<T: 'static + Clone + Send + Sync>(
                 &mut self,
-                sender: crate::app::Sender<T>,
+                sender: fltk::app::Sender<T>,
                 msg: T,
             ) {
                 self.$member.emit(sender, msg)
@@ -1363,7 +1363,7 @@ macro_rules! impl_widget_ext_via {
                 self.$member.set_align(align)
             }
 
-            fn parent(&self) -> Option<crate::group::Group> {
+            fn parent(&self) -> Option<fltk::group::Group> {
                 self.$member.parent()
             }
 
@@ -1451,7 +1451,7 @@ macro_rules! impl_widget_ext_via {
                 self.$member.as_window()
             }
 
-            fn as_group(&self) -> Option<crate::group::Group> {
+            fn as_group(&self) -> Option<fltk::group::Group> {
                 self.$member.as_group()
             }
 
@@ -1509,7 +1509,7 @@ macro_rules! impl_widget_ext_via {
 #[macro_export]
 /// Implements WidgetBase via a member
 macro_rules! impl_widget_base_via {
-    ($widget:ty, $base:ty, $member:tt) => {        
+    ($widget:ty, $base:ty, $member:tt) => {
         unsafe impl WidgetBase for $widget {
             fn new<T: Into<Option<&'static str>>>(
                 x: i32,
@@ -1526,7 +1526,9 @@ macro_rules! impl_widget_base_via {
             }
 
             fn default_fill() -> Self {
-                Self::new(0, 0, 0, 0, None).size_of_parent().center_of_parent()
+                Self::new(0, 0, 0, 0, None)
+                    .size_of_parent()
+                    .center_of_parent()
             }
 
             fn delete(wid: Self) {
@@ -1567,13 +1569,17 @@ macro_rules! impl_widget_base_via {
                 self.$member.handle_data()
             }
 
-            fn resize_callback<F: FnMut(&mut Self, i32, i32, i32, i32) + 'static>(&mut self, mut cb: F) {
+            fn resize_callback<F: FnMut(&mut Self, i32, i32, i32, i32) + 'static>(
+                &mut self,
+                mut cb: F,
+            ) {
                 let mut widget = self.clone();
-                self.$member.resize_callback(move |_, x, y, w, h| cb(&mut widget, x, y, w, h))
+                self.$member
+                    .resize_callback(move |_, x, y, w, h| cb(&mut widget, x, y, w, h))
             }
         }
     };
 }
 
-pub use impl_widget_ext_via;
 pub use impl_widget_base_via;
+pub use impl_widget_ext_via;

@@ -213,8 +213,8 @@ pub use impl_group_ext;
 #[macro_export]
 /// Implements GroupExt via a member
 macro_rules! impl_group_ext_via {
-    ($widget:ty, $member:tt) => {        
-        unsafe impl GroupExt for $widget {       
+    ($widget:ty, $member:tt) => {
+        unsafe impl GroupExt for $widget {
             fn begin(&self) {
                 self.$member.begin()
             }
@@ -303,7 +303,7 @@ macro_rules! impl_group_ext_via {
                 self.$member.bounds()
             }
 
-            unsafe fn into_group(&self) -> crate::group::Group {
+            unsafe fn into_group(&self) -> fltk::group::Group {
                 self.$member.into_group()
             }
         }
